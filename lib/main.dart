@@ -27,7 +27,8 @@ class MainAppState extends State<StatefulWidget> {
       final res = await http.get(
           Uri.parse('https://korean-advice-open-api.vercel.app/api/advice'));
       if (res.statusCode == 200) {
-        Map<String, String> data = jsonDecode(res.body);
+        setState(() {});
+        Map<String, dynamic> data = jsonDecode(res.body);
         // {
         //   author: "마더 테레사",
         //   authorProfile: "카톨릭 수녀, 자선가",
@@ -37,7 +38,7 @@ class MainAppState extends State<StatefulWidget> {
         String authorProfile = data['authorProfile'] ?? '-';
         String message = data['message'] ?? '-';
         setState(() {
-          sentence = '$message \n($author, $authorProfile)';
+          sentence = '$message \n\n($author, $authorProfile)';
         });
       } else {
         throw Exception('statusCode: ${res.statusCode}');
@@ -52,15 +53,20 @@ class MainAppState extends State<StatefulWidget> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.lightBlue[50],
         body: Center(
-            child: Column(children: [
-          Text(sentence ?? 'Hello World!'),
-          OutlinedButton(
-              onPressed: () {
-                _onGenerateButtonClicked();
-              },
-              child: const Text('Regenerate'))
-        ])),
+            child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+              Text(sentence ?? '...', textAlign: TextAlign.center),
+              const SizedBox(height: 20),
+              OutlinedButton(
+                  onPressed: () {
+                    _onGenerateButtonClicked();
+                  },
+                  child: const Text('Regenerate'))
+            ])),
       ),
     );
   }
